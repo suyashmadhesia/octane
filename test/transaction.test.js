@@ -30,6 +30,7 @@ describe("Transcation", () => {
       expect(transaction.outputMap[senderWallet.publicKey]).toEqual(
         senderWallet.balance - amount
       );
+      //console.log(transaction.outputMap);
     });
   });
 
@@ -62,13 +63,12 @@ describe("Transcation", () => {
   });
 
   describe("validTranscation()", () => {
-
     let errorMock;
 
-    beforeEach(()=>{
-        errorMock = jest.fn();
+    beforeEach(() => {
+      errorMock = jest.fn();
 
-        global.console.error = errorMock;
+      global.console.error = errorMock;
     });
 
     describe("when the transcation is valid", () => {
@@ -95,6 +95,51 @@ describe("Transcation", () => {
           expect(errorMock).toHaveBeenCalled();
         });
       });
+    });
+  });
+
+  describe("update()", () => {
+    let originalSignature, originalSenderOutput, nextRecipient, nextAmount;
+
+    beforeEach(() => {
+      originalSignature = transaction.input.signature;
+      originalSenderOutput = transaction.outputMap[senderWallet.publicKey];
+      nextRecipient = "next-recipient";
+      nextAmount = 50;
+
+      transaction.update({
+        senderWallet,
+        recipient: nextRecipient,
+        amount: nextAmount,
+      });
+    });
+
+    it("output the amount to the next recipient", () => {
+      expect(transaction.outputMap[nextRecipient]).toEqual(nextAmount);
+    });
+
+    it("subtract the amount from the original sender output amount", () => {
+      expect(transaction.outputMap[senderWallet.publicKey]).toEqual(
+        originalSenderOutput - nextAmount
+      );
+    });
+
+    it("maintains a total output value that still the matches input amount", () => {
+      const sum = Object.values(transaction.outputMap).reduce(
+        (total, outputAmount) => {
+          total + outputAmount;
+        }
+      );
+      console.log(transaction.outputMap);
+      expect(
+        Object.values(transaction.outputMap).reduce(
+          (total, outputAmount) => total + outputAmount
+        )
+      ).toEqual(transaction.input.amount);
+    });
+
+    it("re-sign the transaction", () => {
+      expect(transaction.input.signature).not.toEqual(originalSignature);
     });
   });
 });
