@@ -25,5 +25,8 @@
     "nodemon": "^2.0.14",
     "redis": "^3.1.2",
     "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "uuid": "^8.3.2"
   }
 }
