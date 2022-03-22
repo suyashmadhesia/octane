@@ -1,7 +1,7 @@
 {
-  "name": "zero",
-  "version": "1.0.0",
-  "description": "",
+  "name": "infy",
+  "version": "0.1.0",
+  "description": "Infy crypto written in the javascript",
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll",
