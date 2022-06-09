@@ -86,6 +86,7 @@ describe('TransactionPool', () => {
     describe('clearBlockchainTransactions()', () => {
         it('clears the pool of any existing blockchain transaction', () => {
             const blockchain = new BlockChain();
+            const expectedTransactionMap = {};
 
             for (let i = 0; i < 6; i++) {
                 const transaction = new Wallet().createTransaction({
@@ -96,14 +97,15 @@ describe('TransactionPool', () => {
                 transactionPool.setTransaction(transaction);
 
                 if (i%2 === 0){
-                    blockchain.addBlock({data : [trabnsaction]});
+                    blockchain.addBlock({data : [transaction]});
     
                 }else{
-                    expectetTransactionMap[transaction.id] = transaction;
+                    expectedTransactionMap[transaction.id] = transaction;
                 }
             }
 
             transactionPool.clearBlockchainTransactions({chain : blockchain.chain});
+            expect(transactionPool.transactionMap).toEqual(expectedTransactionMap)
            
         });
     });

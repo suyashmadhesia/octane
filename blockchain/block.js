@@ -31,10 +31,11 @@ class Block {
         timestamp,
       });
       hash = cryptoHash(timestamp, lastHash, data, nonce, difficulty);
+      // console.log("Scanning hash : 0x" + hash);
     } while (
       hexToBinary(hash).substring(0, difficulty) !== "0".repeat(difficulty)
     );
-
+    console.log("Mined Hash : 0x" + hash);
     return new this({
       timestamp,
       lastHash,
